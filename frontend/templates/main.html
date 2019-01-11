@@ -1,0 +1,57 @@
+{% extends "template.html" %}
+
+{% block style %}
+	caption {
+		caption-side: top;
+	}
+{% endblock %}
+
+{% block body %}
+	<h2>Binance BTC Pairs Long or Short</h2>
+
+	<div class="table-conatiner">
+		<table id="signal_table" class="table table-hover">
+			<caption>Data as of {{ long_short["timestamp"] }}</caption>
+			<thead>
+				<th>Coin</th>
+				<th>Symbol</th>
+				<th>Long/Short</th>
+				<th>Buy Signals</th>
+				<th>Sell Signals</th>
+				<th>Net</th>
+			</thead>
+
+			<tbody>
+				{% for coin, signal_count in long_short["data"].items() %}
+					{% if signal_count["long"] %}
+						<tr class="table-success">
+					{% else %}
+						<tr class="table-danger">
+					{% endif %}
+							<td><a href="/research/{{ coin }}">{{ coin }}</a></td>
+							<td>{{ signal_count["symbol"] }}
+							{% if signal_count["long"] %}
+								<td>Long</td>
+							{% else %}
+								<td>Short</td>
+							{% endif %}
+							<td>{{ signal_count["buy"] }}</td>
+							<td>{{ signal_count["sell"] }}</td>
+							<td><a href="/coin/{{ coin }}">{{ signal_count["total"] }}</a></td>
+						</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		$(document).ready( function () {
+		    $('#signal_table').DataTable({
+		    	paging: false,
+		    	searching: true
+		    });
+		} );
+	</script>
+{% endblock %}

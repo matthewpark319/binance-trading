@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+
+<!-- {% block style %}
+	caption {
+		caption-side: top;
+	}
+{% endblock %} -->
+
+{% block body %}
+	<h2>{{ coin }} ({{ symbol }}) Buy/Sell Signals</h2>
+
+	<div class="table-conatiner">
+		<table id="signal_table" class="table table-hover">
+			<thead>
+				<th>Signal</th>
+				<th>Weight</th>
+			</thead>
+
+			<tbody>
+				{% for signal, weight in signals.items() if weight != 0 %}
+					{% if weight > 0 %}
+						<tr class="table-success">
+					{% else %}
+						<tr class="table-danger">
+					{% endif %}
+							<td>{{ signal }}</td>
+							<td>{{ weight }}</td>
+						</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		$(document).ready( function () {
+		    $('#signal_table').DataTable({
+		    	paging: false,
+		    	searching: true
+		    });
+		} );
+	</script>
+{% endblock %}

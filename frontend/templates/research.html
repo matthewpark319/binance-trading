@@ -1,0 +1,50 @@
+{% extends "template.html" %}
+
+{% block style %}
+	input {
+		display: block;
+	}
+
+	input, button {
+		margin-bottom: 10px;
+	}
+{% endblock %}
+
+{% block body %}
+	<h2>Research: {{ coin }}</h2>
+
+	<div class="container">
+		{% if data is not none %}
+			<h4>Trade of {{ data["price"] }} at {{ data["timestamp"] }}</h4>
+			<table class="table">
+				<thead>
+					<th>Number of days</th>
+					<th>High</th>
+					<th>% High</th>
+					<th>Low</th>
+					<th>% Low</th>
+				</thead>
+				<tbody>
+					{% for i in [1, 2, 3, 7] %}
+						<tr>
+							<td>{{ i }}</td>
+							<td>{{ data["{:d}-day high".format(i)] }}</td>
+							<td>{{ data["{:d}-day percent high".format(i)] }}</td>
+							<td>{{ data["{:d}-day low".format(i)] }}</td>
+							<td>{{ data["{:d}-day percent low".format(i)] }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+		<form id="form" method="POST">
+			<input id="coin" type="hidden" name="coin" value="{{ coin }}">
+			Price: <input id="price" name="price" type="text">
+			Year: <input id="year" name="year" type="text" value="2018">
+			Month: <input id="day" name="month" type="text">
+			Day: <input id="day" name="day" type="text">
+			Hour: <input id="hour" name="hour" type="text">
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+{% endblock %}
