@@ -4,6 +4,8 @@ import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
 from backend.Researcher import Researcher
+import signal_utils
+from backend.SignalCollector import SignalCollector
 
 class Formatter:
 	def __init__(self, signals):
@@ -16,7 +18,7 @@ class Formatter:
 
 	def load_long_short(self):
 		long_short = {}
-		long_short["timestamp"] = self.load_latest_timestamp()
+		long_short["timestamp"] = signal_utils.load_latest_timestamp()
 		long_short["data"] = {}
 		for coin, signal_data in self.signals.items():
 			buy = 0
@@ -29,6 +31,7 @@ class Formatter:
 
 			signal_count = {}
 			signal_count["symbol"] = signal_data["symbol"]
+			signal_count["last_price"] = signal_data["last_price"]
 			signal_count["buy"] = buy
 			signal_count["sell"] = sell
 			signal_count["total"] = buy - sell
@@ -40,11 +43,6 @@ class Formatter:
 			long_short["data"][coin] = signal_count
 
 		return long_short
-
-	def load_latest_timestamp(self):
-		self.cursor.execute("select timestamp from price_btc_data order by timestamp desc limit 1")
-		for (timestamp,) in self.cursor:
-			return timestamp
 
 	def load_coin_page(self, coin):
 		coin_signals = self.signals[coin]

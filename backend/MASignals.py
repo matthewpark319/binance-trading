@@ -3,7 +3,7 @@ import numpy
 import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
-from backend.signalparser import buy_or_sell
+from signal_utils import buy_or_sell
 
 # calculates signals relating to moving averages for the specified window, including:
 # 1. whether the price is above the given moving average (crossover)

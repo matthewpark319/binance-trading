@@ -3,7 +3,7 @@ import numpy
 import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
-from backend.signalparser import buy_or_sell
+from signal_utils import buy_or_sell
 
 class RSISignals:
 	def __init__(self, price_data, window):
@@ -78,14 +78,17 @@ class RSISignals:
 				elif crossed < 0:
 					signals["{:d}-hour RSI crossed below 70 within past {:d} frames".format(self.window, hours)] = crossed
 				else:
-					crossed_above = buy_or_sell(30, self.rsi[-hours], dismiss_negative=True, weight=5)
-					if crossed_above > 0:
-						signals["{:d}-hour RSI crossed above 30 within past {:d} frames".format(self.window, hours)] = crossed_above
-						crossed = 5
+					try: 
+						crossed_above = buy_or_sell(30, self.rsi[-hours], dismiss_negative=True, weight=5)
+						if crossed_above > 0:
+							signals["{:d}-hour RSI crossed above 30 within past {:d} frames".format(self.window, hours)] = crossed_above
+							crossed = 5
 
-					crossed_below = -buy_or_sell(self.rsi[-hours], 70, dismiss_negative=True, weight=5)
-					if crossed_below < 0:
-						signals["{:d}-hour RSI crossed below 70 within past {:d} frames".format(self.window, hours)] = crossed_below
-						crossed = -5
+						crossed_below = -buy_or_sell(self.rsi[-hours], 70, dismiss_negative=True, weight=5)
+						if crossed_below < 0:
+							signals["{:d}-hour RSI crossed below 70 within past {:d} frames".format(self.window, hours)] = crossed_below
+							crossed = -5
+					except IndexError:
+						break
 
 		return signals

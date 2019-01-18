@@ -3,7 +3,7 @@ import numpy
 import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
-from backend.signalparser import buy_or_sell
+from signal_utils import buy_or_sell
 
 class MACrossSignals:
 	def __init__(self, shorter, longer):

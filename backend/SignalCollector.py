@@ -6,10 +6,11 @@ sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
 
 class SignalCollector:
-	def __init__(self):
+	def __init__(self, timestamp=None):
 		(self.connection, self.cursor) = config.get_db_cnx()
 		self.connection.autocommit = True
 		self.coin_dict = self.load_coin_dict()
+		self.timestamp = timestamp
 
 	def load_coin_dict(self):
 		self.cursor.execute("select distinct td.coin_id, name, symbol from " \
@@ -26,9 +27,10 @@ class SignalCollector:
 	def signals(self):
 		signals = {}
 		for _id, info in self.coin_dict.items():
-			calculator = SignalCalculator(_id, self.connection, self.cursor)
+			calculator = SignalCalculator(_id, self.connection, self.cursor, self.timestamp)
 			values = {}
 			values["symbol"] = info["symbol"]
+			values["last_price"] = calculator.last_price()
 			values["signals"] = calculator.signals()
 			signals[info["name"]] = values 
 		return signals

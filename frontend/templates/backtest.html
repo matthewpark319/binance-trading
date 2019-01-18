@@ -11,33 +11,42 @@
 
 	<div class="table-conatiner">
 		<table id="signal_table" class="table table-hover">
-			<caption>Data as of {{ long_short["timestamp"] }}</caption>
 			<thead>
 				<th>Coin</th>
 				<th>Symbol</th>
 				<th>Long/Short</th>
+				<th>Last Price</th>
+				<th>Max</th>
+				<th>Min</th>
 				<th>Buy Signals</th>
 				<th>Sell Signals</th>
 				<th>Net</th>
+				<th>Max Gain</th>
+				<th>Max Loss</th>
 			</thead>
 
 			<tbody>
-				{% for coin, signal_count in long_short["data"].items() %}
-					{% if signal_count["long"] %}
+				{% for coin, test_data in data.items() %}
+					{% if test_data["long"] %}
 						<tr class="table-success">
 					{% else %}
 						<tr class="table-danger">
 					{% endif %}
 							<td><a href="/research/{{ coin }}">{{ coin }}</a></td>
-							<td>{{ signal_count["symbol"] }}</td>
-							{% if signal_count["long"] %}
+							<td>{{ test_data["symbol"] }}</td>
+							{% if test_data["long"] %}
 								<td>Long</td>
 							{% else %}
 								<td>Short</td>
 							{% endif %}
-							<td>{{ signal_count["buy"] }}</td>
-							<td>{{ signal_count["sell"] }}</td>
-							<td><a href="/coin/{{ coin }}">{{ signal_count["total"] }}</a></td>
+							<td>{{ "%.0f"|format(test_data["last_price"]) }}</td>
+							<td>{{ "%.0f"|format(test_data["max"]) }}</td>
+							<td>{{ "%.0f"|format(test_data["min"]) }}</td>
+							<td>{{ test_data["buy"] }}</td>
+							<td>{{ test_data["sell"] }}</td>
+							<td>{{ test_data["total"] }}</td>
+							<td>{{ "%.2f"|format(test_data["max_gain"]) }}</td>
+							<td>{{ "%.2f"|format(test_data["max_loss"]) }}</td>
 						</tr>
 				{% endfor %}
 			</tbody>

@@ -4,8 +4,11 @@ from flask import Flask, render_template, jsonify, request
 from backend.SignalCollector import SignalCollector
 import json
 from Formatter import Formatter
+from BacktestFormatter import BacktestFormatter
 import os
 import config
+import signal_utils
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -28,7 +31,7 @@ def add_header(r):
 def main():
 	global signals
 	global formatter
-	if (config.check_data_updated() == False):
+	if (signal_utils.check_data_updated() == False):
 		os.system("python C:/Users/matth/Desktop/crypto/backend/WebScraper.py True")
 	(signals, formatter) = update_formatter()
 	return formatter.load_main()
@@ -50,6 +53,11 @@ def research(coin):
 		return formatter.load_research_page(coin)
 	if request.method == "POST":
 		return formatter.fetch_research_data(request)
+
+@app.route("/backtest")
+def backtest():
+	formatter = BacktestFormatter()
+	return formatter.load_backtest()
 
 def update_formatter():
 	signal_collector = SignalCollector()
