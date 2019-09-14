@@ -4,6 +4,7 @@ import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 import config
 from signal_utils import buy_or_sell
+import json
 
 class MACrossSignals:
 	def __init__(self, shorter, longer):
@@ -21,7 +22,11 @@ class MACrossSignals:
 
 		signals.update(self.when_crossed_ma(ma_crossed))
 		signals.update(self.when_crossed_ewma(ewma_crossed))
-
+		if self.shorter.get_window() == 10 and self.longer.get_window() == 20:
+			with open('macross.json', 'w') as fp:
+				json.dump(signals, fp)
+			self.shorter.simple_ma.to_csv('shorter.csv')
+			self.longer.simple_ma.to_csv('longer.csv')
 		return signals
 
 	def when_crossed_ma(self, crossed):

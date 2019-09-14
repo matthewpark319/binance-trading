@@ -19,7 +19,7 @@ class MACDSignals:
 		macd_list = []
 
 		for i in range(1, len(ewma_long)):
-			macd_list.insert(0, ewma_short["close"][-i] - ewma_long["close"][-i])
+			macd_list.insert(0, ewma_short["close"].iloc[-i] - ewma_long["close"].iloc[-i])
 
 		macd["MACD"] = macd_list
 		return pandas.DataFrame(data=macd)

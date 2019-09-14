@@ -14,13 +14,15 @@ class MASignals:
 		self.price_data = price_data
 		self.simple_ma = self.price_data[["close"]].rolling(self.window).mean()
 		self.ewma = self.price_data[["close"]].ewm(span=self.window, adjust=False).mean()
+		if self.window == 10:
+			self.price_data.to_csv('price.csv')
 
 	def get_window(self):
 		return self.window
 
 	def signals(self):
 		buy_signals = {}
-		last_price = self.price_data["close"][-1]
+		last_price = self.price_data["close"].iloc[-1]
 		last_ma = self.ma_at(1)
 		last_ewma = self.ewma_at(1)
 
@@ -29,17 +31,16 @@ class MASignals:
 
 		buy_signals["price > {:d}-hour EWMA".format(self.window)] = buy_or_sell(last_price, last_ewma)
 		buy_signals["{:d}-hour EWMA increasing".format(self.window)] = buy_or_sell(last_ewma, self.ewma_at(2))
-
 		return buy_signals
 
 	def ma_at(self, hours_ago):
 		try:
-			return self.simple_ma["close"][-hours_ago]
+			return self.simple_ma["close"].iloc[-hours_ago]
 		except (KeyError, IndexError):
 			return None
 
 	def ewma_at(self, hours_ago):
 		try:
-			return self.ewma["close"][-hours_ago]
+			return self.ewma["close"].iloc[-hours_ago]
 		except (KeyError, IndexError):
 			return None

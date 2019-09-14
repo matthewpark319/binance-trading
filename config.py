@@ -9,7 +9,7 @@ config = {
 
 connection = mysql.connector.connect(**config)
 cursor = connection.cursor(buffered=True)
+cursor.execute("use crypto;")
 
 def get_db_cnx():
-	cursor.execute("use crypto;")
 	return (connection, cursor)

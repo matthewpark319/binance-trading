@@ -12,7 +12,7 @@ class BacktestFormatter:
 	def __init__(self, timestamp=None): 
 		(self.connection, self.cursor) = config.get_db_cnx()
 		if timestamp is None:
-			self.timestamp = signal_utils.load_latest_timestamp() - timedelta(days=2)
+			self.timestamp = signal_utils.load_latest_timestamp() - timedelta(days=4)
 		else:
 			self.timestamp = timestamp
 

@@ -2,9 +2,11 @@ import sys
 sys.path.append("C:/Users/matth/Desktop/crypto")
 from flask import Flask, render_template, jsonify, request
 from backend.SignalCollector import SignalCollector
+from backend.StockSignalCollector import StockSignalCollector
 import json
 from Formatter import Formatter
 from BacktestFormatter import BacktestFormatter
+from StockBacktestFormatter import StockBacktestFormatter
 import os
 import config
 import signal_utils
@@ -31,8 +33,8 @@ def add_header(r):
 def main():
 	global signals
 	global formatter
-	if (signal_utils.check_data_updated() == False):
-		os.system("python C:/Users/matth/Desktop/crypto/backend/WebScraper.py True")
+	# if (signal_utils.check_data_updated() == False):
+	# 	os.system("python C:/Users/matth/Desktop/crypto/backend/WebScraper.py True")
 	(signals, formatter) = update_formatter()
 	return formatter.load_main()
 
@@ -59,8 +61,13 @@ def backtest():
 	formatter = BacktestFormatter()
 	return formatter.load_backtest()
 
+@app.route("/backtest-stocks")
+def backtest_stocks():
+	formatter = StockBacktestFormatter()
+	return formatter.load_backtest()
+
 def update_formatter():
-	signal_collector = SignalCollector()
+	signal_collector = StockSignalCollector()
 	signals = signal_collector.signals()
 	return (signals, Formatter(signals))
 
